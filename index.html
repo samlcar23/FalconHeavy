@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Objects</title>
+  <script src="webgl-utils.js"></script>
+  <script src="shader-utils.js"></script>
+  <script src="gl-matrix-min.js"></script>
+  <script src="geometry/Object3D.js"></script>
+  <script src="geometry/Cone.js"></script>
+  <script src="geometry/Sphere.js"></script>
+  <script src="geometry/PolygonalPrism.js"></script>
+  <script src="render.js"></script>
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+    #container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      background: lavender;
+    }
+    table, th, td{
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td{
+      text-align: left;
+    }
+  </style>
+</head>
+<body onload="main()">
+  <h2>Falcon Heavy</h2>
+
+  <!--
+  <table style="width:30%">
+    <tr><th bgcolor="#46DAD4">Action</th><th bgcolor="#46DAD4">Key</th><th bgcolor="#13DB5B">Action</th><th bgcolor="#13DB5B">Key</th></tr>
+    <tr><td>Move Forward</td><td>Up Arrow</td><td>Move Backward</td><td>Down Arrow</td></tr>
+    <tr><td>Move Left</td><td>Left Arrow</td><td>Move Right</td><td>Right Arrow</td></tr>
+    <tr><td>Pitch Down</td><td>W</td><td>Pitch Up</td><td>S</td></tr>
+    <tr><td>Bank Left</td><td>A</td><td>Bank Right</td><td>D</td></tr>
+    <tr><td>Yaw Left</td><td>Q</td><td>Yaw Right</td><td>E</td></tr>
+  </table>
+  -->
+
+  <div id="container">
+    <canvas id="my-canvas"></canvas>
+  </div>
+</body>
+</html>
