@@ -46,8 +46,8 @@ function main() {
     projMat = mat4.create();
     gl.uniformMatrix4fv (projUnif, false, projMat);
     viewMat = mat4.lookAt(mat4.create(),
-      vec3.fromValues (-2, -2, 3),  // eye coord
-      vec3.fromValues (1, 1, 1),  // gaze point
+      vec3.fromValues (-13, -13, 10),  // eye coord
+      vec3.fromValues (1, 1, 10),  // gaze point
       vec3.fromValues (0, 0, 1)   // Z is up
     );
     gl.uniformMatrix4fv (viewUnif, false, viewMat);
@@ -74,24 +74,24 @@ function drawScene() {
 
 function createObject() {
 
-    var color = vec3.fromValues(.1, .3, .7);
+    //var color = vec3.fromValues(.1, .3, .7);
 
-    let scale = new PolygonalPrism(gl, {
-        topRadius: .5,
-        bottomRadius: .5,
-        numSides: 15,
-        height: 1,
-        topColor: color,
-        bottomColor: color
-    });
+    // let scale = new PolygonalPrism(gl, {
+    //     topRadius: .5,
+    //     bottomRadius: .5,
+    //     numSides: 15,
+    //     height: 1,
+    //     topColor: color,
+    //     bottomColor: color
+    // });
     //let sphere = new Sphere(gl, {radius: 0.2, splitDepth: 4});
 
-    mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(1, 1, 0));
+    //mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(1, 1, 0));
     //mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(.3, .3, 0));
 
     let rocket = new FalconHeavy(gl);
 
-    allObjs.push(scale, rocket);
+    allObjs.push(rocket);
 }
 
 function setupListeners(){
