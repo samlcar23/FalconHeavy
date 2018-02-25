@@ -88,10 +88,10 @@ function createObject() {
     //     topColor: color,
     //     bottomColor: color
     // });
-    //let sphere = new Sphere(gl, {radius: 0.2, splitDepth: 4});
+
 
     //mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(1, 1, 0));
-    //mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(.3, .3, 0));
+    //mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(-5, -5, 0));
 
     let rocket = new FalconHeavy(gl);
 

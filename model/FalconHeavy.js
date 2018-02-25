@@ -128,4 +128,22 @@ class FalconHeavy extends ObjectGroup {
 
         return rocketGroup;
     }
+
+    makeFairing(){
+
+        let fairingGroup = new ObjectGroup(gl);
+
+        // white
+        var color = vec3.fromValues(1, 1, 1);
+
+        let connector = new PolygonalPrism(gl, {
+            topRadius: .55,
+            bottomRadius: .55,
+            numSides: 20,
+            height: height,
+            topColor: color,
+            bottomColor: color
+        });
+
+    }
 }
