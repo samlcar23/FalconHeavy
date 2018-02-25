@@ -1,14 +1,18 @@
 /**
  * Created by Hans Dulimarta.
  */
-let canvas
+let canvas;
 let gl;
 let allObjs = [];
-
+var toggleBtn;
 
 
 function main() {
   canvas = document.getElementById("my-canvas");
+
+  //toggle button for controls table
+  toggleBtn = document.querySelector('input');
+  toggleBtn.addEventListener('click', toggleTable);
 
   setupListeners();
 
@@ -171,4 +175,15 @@ function resizeWindow() {
   mat4.perspective (projMat, glMatrix.toRadian(60), w/h, 0.05, 20);
   gl.uniformMatrix4fv (projUnif, false, projMat);
   gl.viewport(0, 0, w, h);
+}
+
+function toggleTable() {
+    var x = document.getElementById("tableView");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        toggleBtn.value = "Hide Controls";
+    } else {
+        x.style.display = "none";
+        toggleBtn.value = "Show Controls";
+    }
 }

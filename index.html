@@ -41,16 +41,18 @@
 <body onload="main()">
   <h2>Falcon Heavy</h2>
 
+  <input type="button" value="Show Controls">
 
-  <table style="width:30%">
-    <tr><th bgcolor="#46DAD4">Action</th><th bgcolor="#46DAD4">Key</th><th bgcolor="#13DB5B">Action</th><th bgcolor="#13DB5B">Key</th></tr>
-    <tr><td>Move Forward</td><td>Up Arrow</td><td>Move Backward</td><td>Down Arrow</td></tr>
-    <tr><td>Move Left</td><td>Left Arrow</td><td>Move Right</td><td>Right Arrow</td></tr>
-    <tr><td>Pitch Down</td><td>W</td><td>Pitch Up</td><td>S</td></tr>
-    <tr><td>Bank Left</td><td>A</td><td>Bank Right</td><td>D</td></tr>
-    <tr><td>Yaw Left</td><td>Q</td><td>Yaw Right</td><td>E</td></tr>
-  </table>
-
+  <div id="tableView" style="display: none;">
+    <table style="width:30%">
+      <tr><th bgcolor="#46DAD4">Action</th><th bgcolor="#46DAD4">Key</th><th bgcolor="#13DB5B">Action</th><th bgcolor="#13DB5B">Key</th></tr>
+      <tr><td>Move Forward</td><td>Up Arrow</td><td>Move Backward</td><td>Down Arrow</td></tr>
+      <tr><td>Move Left</td><td>Left Arrow</td><td>Move Right</td><td>Right Arrow</td></tr>
+      <tr><td>Pitch Down</td><td>W</td><td>Pitch Up</td><td>S</td></tr>
+      <tr><td>Bank Left</td><td>A</td><td>Bank Right</td><td>D</td></tr>
+      <tr><td>Yaw Left</td><td>Q</td><td>Yaw Right</td><td>E</td></tr>
+    </table>
+  </div>
 
   <div id="container">
     <canvas id="my-canvas"></canvas>
