@@ -23,6 +23,9 @@ class FalconHeavy extends ObjectGroup {
         let centerRocketGroup = new ObjectGroup(gl);
         let rightRocketGroup = new ObjectGroup(gl);
 
+        //Group for fairing on top of center rocket
+        let fairingGroup = new ObjectGroup(gl);
+
         //Create the boosters for each rocket cylinder
         leftBoosterGroup = this.makeBoosterArray(0,0);
         centerBoosterGroup = this.makeBoosterArray(0,0);
@@ -32,6 +35,9 @@ class FalconHeavy extends ObjectGroup {
         leftRocketGroup = this.makeRocketCylinder(13.3);
         centerRocketGroup = this.makeRocketCylinder(18.7);
         rightRocketGroup = this.makeRocketCylinder(13.3);
+
+        //Create the fairing for the center rocket
+        fairingGroup = this.makeFairing();
 
         /*
           TODO: We should consider adding the leftBoosterGroup to a group we make for the leftCylinder or something.
@@ -43,6 +49,9 @@ class FalconHeavy extends ObjectGroup {
         // Push the three rocket cylinders to main Falcon Heavy Group (this).
         this.group.push(leftRocketGroup, centerRocketGroup, rightRocketGroup);
 
+        // Push the fairing group to the main Falcon Heavy Group (this).
+        this.group.push(fairingGroup);
+
         // Translate booster groups so all in a line side by side
         mat4.translate(leftBoosterGroup.coordFrame, leftBoosterGroup.coordFrame, vec3.fromValues(-1, 1, 0));
         mat4.translate(centerBoosterGroup.coordFrame, centerBoosterGroup.coordFrame, vec3.fromValues(0, 0, 0));
@@ -52,6 +61,9 @@ class FalconHeavy extends ObjectGroup {
         mat4.translate(leftRocketGroup.coordFrame, leftRocketGroup.coordFrame, vec3.fromValues(-1, 1, .3));
         mat4.translate(centerRocketGroup.coordFrame, centerRocketGroup.coordFrame, vec3.fromValues(0, 0, .3));
         mat4.translate(rightRocketGroup.coordFrame, rightRocketGroup.coordFrame, vec3.fromValues(1, -1, .3));
+
+        //translate the fairing to be on top of the center rocket
+        mat4.translate(fairingGroup.coordFrame, fairingGroup.coordFrame, vec3.fromValues(0, 0, 19));
 
     }
 
@@ -134,16 +146,41 @@ class FalconHeavy extends ObjectGroup {
         let fairingGroup = new ObjectGroup(gl);
 
         // white
-        var color = vec3.fromValues(1, 1, 1);
+        var color = vec3.fromValues(.9, .9, .9);
 
         let connector = new PolygonalPrism(gl, {
-            topRadius: .55,
-            bottomRadius: .55,
+            topRadius: .8,
+            /*honestly not sure why but it looks better*/
+            bottomRadius: .4,
             numSides: 20,
-            height: height,
+            height: .5,
             topColor: color,
             bottomColor: color
         });
+
+        let body = new PolygonalPrism(gl, {
+            topRadius: .8,
+            bottomRadius: .8,
+            numSides: 20,
+            height: 2.1,
+            topColor: color,
+            bottomColor: color
+        });
+
+        let top = new Cone(gl, {
+            radius: .8,
+            height: 1.6,
+            radialDiv: 10,
+            tipColor: color,
+            baseColor: color
+        });
+
+        mat4.translate(body.coordFrame, body.coordFrame, vec3.fromValues(0, 0, .5));
+        mat4.translate(top.coordFrame, top.coordFrame, vec3.fromValues(0, 0, 2.6));
+
+        fairingGroup.group.push(connector, body, top);
+
+        return fairingGroup;
 
     }
 }
