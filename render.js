@@ -73,19 +73,93 @@ function drawScene() {
 
 
 function createObject() {
-            let cone = new Cone(gl, {
-                radius: .4,
-                height: 1
-            });
-            let sphere = new Sphere(gl, {radius: 0.2, splitDepth: 4});
 
-            mat4.translate(cone.coordFrame, cone.coordFrame, vec3.fromValues(1, 1, 0));
-            mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(.3, .3, 0));
-            allObjs.push(cone, sphere);
+    var color = vec3.fromValues(.1, .3, .7);
+
+    let scale = new PolygonalPrism(gl, {
+        topRadius: .5,
+        bottomRadius: .5,
+        numSides: 15,
+        height: 1,
+        topColor: color,
+        bottomColor: color
+    });
+    //let sphere = new Sphere(gl, {radius: 0.2, splitDepth: 4});
+
+    mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(1, 1, 0));
+    //mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(.3, .3, 0));
+
+    let rocket = new FalconHeavy(gl);
+
+    allObjs.push(scale, rocket);
 }
 
 function setupListeners(){
+    //keydown control
+    window.addEventListener('keydown', event => {
+        var key = String.fromCharCode(event.keyCode);
 
+        var temp = mat4.create();
+
+        switch (key) {
+            case 'W':
+                //Pitch down
+                mat4.fromXRotation(temp, 0.1);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case 'A':
+                //Bank left
+                mat4.fromZRotation(temp, -0.1);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case 'S':
+                //Pitch up
+                mat4.fromXRotation(temp, -0.1);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case 'D':
+                //Bank right
+                mat4.fromZRotation(temp, 0.1);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case 'Q':
+                //Yaw left
+                mat4.fromYRotation(temp, -0.1);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case 'E':
+                //Yaw right
+                mat4.fromYRotation(temp, 0.1);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case '&':
+                //forward
+                translation = vec3.fromValues(0, 0, .1);
+                mat4.fromTranslation(temp, translation);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case '(':
+                //reverse
+                translation = vec3.fromValues(0, 0, -.1);
+                mat4.fromTranslation(temp, translation);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case '%':
+                //left
+                translation = vec3.fromValues(.1, 0, 0);
+                mat4.fromTranslation(temp, translation);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+            case "'":
+                //right
+                translation = vec3.fromValues(-.1, 0, 0);
+                mat4.fromTranslation(temp, translation);
+                mat4.multiply(viewMat, temp, viewMat);
+                break;
+        }
+        gl.uniformMatrix4fv (viewUnif, false, viewMat);
+        window.requestAnimFrame(drawScene);
+    });
 }
 
 
