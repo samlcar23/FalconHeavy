@@ -61,7 +61,7 @@ class FalconHeavy extends ObjectGroup {
         let boosterGroup = new ObjectGroup(gl);
 
         //grey
-        var color = vec3.fromValues(.1, .1, .1);
+        var color = vec3.fromValues(.23, .23, .23);
 
         //temp variables for booster placement
         var temp1 = 0.4;
@@ -113,7 +113,7 @@ class FalconHeavy extends ObjectGroup {
         let rocketGroup = new ObjectGroup(gl);
 
         // white
-        var color = vec3.fromValues(1, 1, 1);
+        var color = vec3.fromValues(.9, .9, .9);
 
         let rocketCylinder = new PolygonalPrism(gl, {
             topRadius: .55,
