@@ -26,6 +26,10 @@ class FalconHeavy extends ObjectGroup {
         //Group for fairing on top of center rocket
         let fairingGroup = new ObjectGroup(gl);
 
+        //Group for rocket cylinder toppers
+        let leftRocketTopperGroup = new ObjectGroup(gl);
+        let rightRocketTopperGroup = new ObjectGroup(gl);
+
         //Create the boosters for each rocket cylinder
         leftBoosterGroup = this.makeBoosterArray(0,0);
         centerBoosterGroup = this.makeBoosterArray(0,0);
@@ -38,6 +42,10 @@ class FalconHeavy extends ObjectGroup {
 
         //Create the fairing for the center rocket
         fairingGroup = this.makeFairing();
+
+        //Create the topper for left and right rockets
+        leftRocketTopperGroup = this.makeTopper();
+        rightRocketTopperGroup = this.makeTopper();
 
         /*
           TODO: We should consider adding the leftBoosterGroup to a group we make for the leftCylinder or something.
@@ -52,6 +60,10 @@ class FalconHeavy extends ObjectGroup {
         // Push the fairing group to the main Falcon Heavy Group (this).
         this.group.push(fairingGroup);
 
+        //TODO: add the toppers to rocket cylinders instead
+        // Push the rocket toppers to the main Falcon Heavy Group (this).
+        this.group.push(leftRocketTopperGroup, rightRocketTopperGroup);
+
         // Translate booster groups so all in a line side by side
         mat4.translate(leftBoosterGroup.coordFrame, leftBoosterGroup.coordFrame, vec3.fromValues(-1, 1, 0));
         mat4.translate(centerBoosterGroup.coordFrame, centerBoosterGroup.coordFrame, vec3.fromValues(0, 0, 0));
@@ -64,6 +76,11 @@ class FalconHeavy extends ObjectGroup {
 
         //translate the fairing to be on top of the center rocket
         mat4.translate(fairingGroup.coordFrame, fairingGroup.coordFrame, vec3.fromValues(0, 0, 19));
+
+        //translate the toppers to be on top of the cylinders
+        mat4.translate(leftRocketTopperGroup.coordFrame, leftRocketTopperGroup.coordFrame, vec3.fromValues(-1, 1, 13.6));
+        mat4.translate(rightRocketTopperGroup.coordFrame, rightRocketTopperGroup.coordFrame, vec3.fromValues(1, -1, 13.6));
+
 
     }
 
@@ -151,7 +168,7 @@ class FalconHeavy extends ObjectGroup {
         let connector = new PolygonalPrism(gl, {
             topRadius: .8,
             /*honestly not sure why but it looks better*/
-            bottomRadius: .4,
+            bottomRadius: .30,
             numSides: 20,
             height: .5,
             topColor: color,
@@ -167,20 +184,115 @@ class FalconHeavy extends ObjectGroup {
             bottomColor: color
         });
 
-        let top = new Cone(gl, {
-            radius: .8,
-            height: 1.6,
-            radialDiv: 10,
-            tipColor: color,
-            baseColor: color
+        let top1 = new PolygonalPrism(gl, {
+            topRadius: .75,
+            bottomRadius: .85,
+            numSides: 20,
+            height: .2,
+            topColor: color,
+            bottomColor: color
         });
 
-        mat4.translate(body.coordFrame, body.coordFrame, vec3.fromValues(0, 0, .5));
-        mat4.translate(top.coordFrame, top.coordFrame, vec3.fromValues(0, 0, 2.6));
+        let top2 = new PolygonalPrism(gl, {
+            topRadius: .65,
+            bottomRadius: .85,
+            numSides: 20,
+            height: .2,
+            topColor: color,
+            bottomColor: color
+        });
 
-        fairingGroup.group.push(connector, body, top);
+        let top3 = new PolygonalPrism(gl, {
+            topRadius: .5,
+            bottomRadius: .8,
+            numSides: 20,
+            height: .2,
+            topColor: color,
+            bottomColor: color
+        });
+
+        let top4 = new PolygonalPrism(gl, {
+            topRadius: .27,
+            bottomRadius: .725,
+            numSides: 20,
+            height: .2,
+            topColor: color,
+            bottomColor: color
+        });
+
+        let sphere = new Sphere(gl, {
+            radius: .365,
+            splitDepth: 5,
+            northColor: color,
+            equatorColor: color,
+            southColor: color
+        });
+
+
+
+        mat4.translate(body.coordFrame, body.coordFrame, vec3.fromValues(0, 0, .5));
+        mat4.translate(top1.coordFrame, top1.coordFrame, vec3.fromValues(0, 0, 2.6));
+        mat4.translate(top2.coordFrame, top2.coordFrame, vec3.fromValues(0, 0, 2.8));
+        mat4.translate(top3.coordFrame, top3.coordFrame, vec3.fromValues(0, 0, 3.0));
+        mat4.translate(top4.coordFrame, top4.coordFrame, vec3.fromValues(0, 0, 3.2));
+        mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(0, 0, 3.15));
+
+
+        fairingGroup.group.push(connector, body, top1, top2, top3, top4, sphere);
 
         return fairingGroup;
 
+    }
+
+    makeTopper(){
+
+        let topperGroup = new ObjectGroup(gl);
+
+        // white
+        var color = vec3.fromValues(.9, .9, .9);
+
+        let top1 = new PolygonalPrism(gl, {
+            topRadius: .5,
+            bottomRadius: .6,
+            numSides: 20,
+            height: .2,
+            topColor: color,
+            bottomColor: color
+        });
+
+        let top2 = new PolygonalPrism(gl, {
+            topRadius: .4,
+            bottomRadius: .6,
+            numSides: 20,
+            height: .2,
+            topColor: color,
+            bottomColor: color
+        });
+
+        let top3 = new PolygonalPrism(gl, {
+            topRadius: .2,
+            bottomRadius: .6,
+            numSides: 20,
+            height: .2,
+            topColor: color,
+            bottomColor: color
+        });
+
+        let sphere = new Sphere(gl, {
+            radius: .25,
+            splitDepth: 5,
+            northColor: color,
+            equatorColor: color,
+            southColor: color
+        });
+
+        mat4.translate(top1.coordFrame, top1.coordFrame, vec3.fromValues(0, 0, 0));
+        mat4.translate(top2.coordFrame, top2.coordFrame, vec3.fromValues(0, 0, .2));
+        mat4.translate(top3.coordFrame, top3.coordFrame, vec3.fromValues(0, 0, .4));
+        mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(0, 0, .45));
+
+        topperGroup.group.push(top1, top2, top3, sphere);
+
+        return topperGroup;
     }
 }
