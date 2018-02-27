@@ -42,20 +42,21 @@
 </head>
 <body onload="main()">
   <h2>Falcon Heavy</h2>
+  <p>Dylan Kernohan & Sam Carson</p>
 
   <input id="toggle" type="button" value="Show Controls" onclick="toggleTable();" />
 
-
   <div id="tableView" style="display: none;">
-    <table style="width:30%">
+    <table style="width:40%">
       <tr><th bgcolor="#46DAD4">Action</th><th bgcolor="#46DAD4">Key</th><th bgcolor="#13DB5B">Action</th><th bgcolor="#13DB5B">Key</th></tr>
-      <tr><td>Move Forward</td><td>Up Arrow</td><td>Move Backward</td><td>Down Arrow</td></tr>
+      <tr><td>Move Forward/Up</td><td>Up Arrow</td><td>Move Backward/Down</td><td>Down Arrow</td></tr>
       <tr><td>Move Left</td><td>Left Arrow</td><td>Move Right</td><td>Right Arrow</td></tr>
       <tr><td>Pitch Down</td><td>W</td><td>Pitch Up</td><td>S</td></tr>
       <tr><td>Bank Left</td><td>A</td><td>Bank Right</td><td>D</td></tr>
       <tr><td>Yaw Left</td><td>Q</td><td>Yaw Right</td><td>E</td></tr>
     </table>
   </div>
+
   <div>
     <input type="radio" id="rocket" name="control" onclick="objectSelect();"> Falcon Heavy<br>
     <input type="radio" id="car" name="control" onclick="objectSelect();"> Tesla Roadster<br>
