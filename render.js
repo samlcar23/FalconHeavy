@@ -5,65 +5,76 @@ let canvas;
 let gl;
 let allObjs = [];
 var toggleBtn;
+let mouse;
+var dragging = false;
+var radioBtn;
+var selector = "camera";
+let rocket;
 
 
 function main() {
-  canvas = document.getElementById("my-canvas");
+    canvas = document.getElementById("my-canvas");
 
-  //toggle button for controls table
-  toggleBtn = document.querySelector('input');
-  toggleBtn.addEventListener('click', toggleTable);
+    //for mouse control
+    mouse = document.getElementById("my-canvas");
 
-  setupListeners();
+    //toggle button for controls table
+    toggleBtn = document.getElementById("toggle");
 
-  /* setup window resize listener */
-  window.addEventListener('resize', resizeWindow);
+    //radio button for what to control
+    radioBtn = ('input[name=control]');
 
-  gl = WebGLUtils.create3DContext(canvas, null);
-  ShaderUtils.loadFromFile(gl, "vshader.glsl", "fshader.glsl")
-  .then (prog => {
 
-    /* put all one-time initialization logic here */
-    gl.useProgram (prog);
-    gl.clearColor (0, 0, 0, 1);
-    gl.enable(gl.CULL_FACE);
-    gl.enable(gl.DEPTH_TEST);
-    gl.cullFace(gl.BACK);
+    setupListeners();
 
-    /* the vertex shader defines TWO attribute vars and ONE uniform var */
-    let posAttr = gl.getAttribLocation (prog, "vertexPos");
-    let colAttr = gl.getAttribLocation (prog, "vertexCol");
-    Object3D.linkShaderAttrib({
-      positionAttr: posAttr,
-      colorAttr: colAttr
-    });
-    let modelUnif = gl.getUniformLocation (prog, "modelCF");
-    projUnif = gl.getUniformLocation (prog, "projection");
-    viewUnif = gl.getUniformLocation (prog, "view");
-    Object3D.linkShaderUniform({
-      projection: projUnif,
-      view: viewUnif,
-      model: modelUnif
-    });
-    gl.enableVertexAttribArray (posAttr);
-    gl.enableVertexAttribArray (colAttr);
-    projMat = mat4.create();
-    gl.uniformMatrix4fv (projUnif, false, projMat);
-    viewMat = mat4.lookAt(mat4.create(),
-      vec3.fromValues (-13, -13, 10),  // eye coord
-      vec3.fromValues (1, 1, 10),  // gaze point
-      vec3.fromValues (0, 0, 1)   // Z is up
-    );
-    gl.uniformMatrix4fv (viewUnif, false, viewMat);
+    /* setup window resize listener */
+    window.addEventListener('resize', resizeWindow);
 
-    /* recalculate new viewport */
-    resizeWindow();
+    gl = WebGLUtils.create3DContext(canvas, null);
+    ShaderUtils.loadFromFile(gl, "vshader.glsl", "fshader.glsl")
+        .then (prog => {
 
-    createObject();
+            /* put all one-time initialization logic here */
+            gl.useProgram (prog);
+            gl.clearColor (0, 0, 0, 1);
+            gl.enable(gl.CULL_FACE);
+            gl.enable(gl.DEPTH_TEST);
+            gl.cullFace(gl.BACK);
 
-    /* initiate the render request */
-    window.requestAnimFrame(drawScene);
-  });
+            /* the vertex shader defines TWO attribute vars and ONE uniform var */
+            let posAttr = gl.getAttribLocation (prog, "vertexPos");
+            let colAttr = gl.getAttribLocation (prog, "vertexCol");
+            Object3D.linkShaderAttrib({
+                positionAttr: posAttr,
+                colorAttr: colAttr
+            });
+            let modelUnif = gl.getUniformLocation (prog, "modelCF");
+            projUnif = gl.getUniformLocation (prog, "projection");
+            viewUnif = gl.getUniformLocation (prog, "view");
+            Object3D.linkShaderUniform({
+                projection: projUnif,
+                view: viewUnif,
+                model: modelUnif
+            });
+            gl.enableVertexAttribArray (posAttr);
+            gl.enableVertexAttribArray (colAttr);
+            projMat = mat4.create();
+            gl.uniformMatrix4fv (projUnif, false, projMat);
+            viewMat = mat4.lookAt(mat4.create(),
+                vec3.fromValues (0, -20, 10),  // eye coord
+                vec3.fromValues (1, 1, 10),  // gaze point
+                vec3.fromValues (0, 0, 1)   // Z is up
+            );
+            gl.uniformMatrix4fv (viewUnif, false, viewMat);
+
+            /* recalculate new viewport */
+            resizeWindow();
+
+            createObject();
+
+            /* initiate the render request */
+            window.requestAnimFrame(drawScene);
+        });
 }
 
 function drawScene() {
@@ -78,24 +89,39 @@ function drawScene() {
 
 function createObject() {
 
-    //var color = vec3.fromValues(.1, .3, .7);
+    //used as reference point
+    let scale = new PolygonalPrism(gl, {
+        topRadius: .5,
+        bottomRadius: .5,
+        numSides: 15,
+        height: 20,
+    });
+    let scale2 = new PolygonalPrism(gl, {
+        topRadius: .5,
+        bottomRadius: .5,
+        numSides: 15,
+        height: 20,
+    });
+    let scale3 = new PolygonalPrism(gl, {
+        topRadius: .5,
+        bottomRadius: .5,
+        numSides: 15,
+        height: 20,
+    });
+    // let axes = new Axes(gl);
+    // mat4.translate(axes.coordFrame, axes.coordFrame, vec3(0, 0, 0));
 
-    // let scale = new PolygonalPrism(gl, {
-    //     topRadius: .5,
-    //     bottomRadius: .5,
-    //     numSides: 15,
-    //     height: 1,
-    //     topColor: color,
-    //     bottomColor: color
-    // });
-
-
-    //mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(1, 1, 0));
+    mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(3, 0, 0));
+    mat4.translate(scale2.coordFrame, scale2.coordFrame, vec3.fromValues(0, 0, 0));
+    mat4.translate(scale3.coordFrame, scale3.coordFrame, vec3.fromValues(-3, 0, 0));
     //mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(-5, -5, 0));
 
-    let rocket = new FalconHeavy(gl);
+    rocket = new FalconHeavy(gl);
 
-    allObjs.push(rocket);
+    //set rocket straight to axes
+    mat4.rotateZ(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(45));
+
+    allObjs.push(rocket, scale, scale2, scale3);
 }
 
 function setupListeners(){
@@ -103,66 +129,30 @@ function setupListeners(){
     window.addEventListener('keydown', event => {
         var key = String.fromCharCode(event.keyCode);
 
-        var temp = mat4.create();
+        if(selector === "camera"){
+            controlCamera(key);
+        } else if(selector === "rocket"){
+            controlRocket(key);
+        } else if(selector === "car"){
 
-        switch (key) {
-            case 'W':
-                //Pitch down
-                mat4.fromXRotation(temp, 0.1);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case 'A':
-                //Bank left
-                mat4.fromZRotation(temp, -0.1);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case 'S':
-                //Pitch up
-                mat4.fromXRotation(temp, -0.1);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case 'D':
-                //Bank right
-                mat4.fromZRotation(temp, 0.1);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case 'Q':
-                //Yaw left
-                mat4.fromYRotation(temp, -0.1);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case 'E':
-                //Yaw right
-                mat4.fromYRotation(temp, 0.1);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case '&':
-                //forward
-                translation = vec3.fromValues(0, 0, .1);
-                mat4.fromTranslation(temp, translation);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case '(':
-                //reverse
-                translation = vec3.fromValues(0, 0, -.1);
-                mat4.fromTranslation(temp, translation);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case '%':
-                //left
-                translation = vec3.fromValues(.1, 0, 0);
-                mat4.fromTranslation(temp, translation);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
-            case "'":
-                //right
-                translation = vec3.fromValues(-.1, 0, 0);
-                mat4.fromTranslation(temp, translation);
-                mat4.multiply(viewMat, temp, viewMat);
-                break;
+        } else {
+            console.log("Something has gone horribly wrong");
         }
-        gl.uniformMatrix4fv (viewUnif, false, viewMat);
-        window.requestAnimFrame(drawScene);
+
+    });
+
+    //mouse controls
+    mouse.addEventListener ('mousedown', event => {
+        dragging = true;
+        console.log("Mouse down", dragging);
+        console.log(`Mouse down at ${event.offsetX} ${event.offsetY}`);
+    });
+
+    mouse.addEventListener ('mouseup', event => {
+        dragging = false;
+        console.log("Mouse up", dragging);
+        console.log(`Mouse up at ${event.offsetX} ${event.offsetY}`);
+
     });
 }
 
@@ -186,4 +176,164 @@ function toggleTable() {
         x.style.display = "none";
         toggleBtn.value = "Show Controls";
     }
+}
+
+function objectSelect() {
+
+    if (document.getElementById('car').checked) {
+        selector = "car";
+        console.log(selector);
+    } else if (document.getElementById('rocket').checked) {
+        selector = "rocket";
+
+        //camera snap to rocket
+        viewMat = mat4.lookAt(mat4.create(),
+            vec3.fromValues (0, -20, 10),  // eye coord
+            vec3.fromValues (1, 1, 10),  // gaze point
+            vec3.fromValues (0, 0, 1)   // Z is up
+        );
+
+        console.log(selector);
+    } else if (document.getElementById('camera').checked) {
+        selector = "camera";
+        console.log(selector);
+    } else {
+        console.log("Error in objectSelect()");
+    }
+
+    document.getElementById(selector).blur();
+}
+
+function controlRocket(key){
+    var temp = mat4.create();
+
+    switch (key) {
+        case 'W':
+            //Pitch down
+            mat4.rotateX(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(-1));
+            mat4.rotateY(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(1));
+
+            break;
+        case 'A':
+            //Bank left
+            mat4.rotateX(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(-1));
+            mat4.rotateY(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(-1));
+
+            break;
+        case 'S':
+            //Pitch up
+            mat4.rotateX(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(1));
+            mat4.rotateY(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(-1));
+
+            break;
+        case 'D':
+            //Bank right
+            mat4.rotateX(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(1));
+            mat4.rotateY(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(1));
+
+            break;
+        case 'Q':
+            //Yaw left
+            mat4.rotateZ(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(1));
+
+            break;
+        case 'E':
+            //Yaw right
+            mat4.rotateZ(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(-1));
+
+            break;
+        case '&':
+            //up
+            mat4.translate(rocket.coordFrame, rocket.coordFrame, vec3.fromValues(0, 0, 0.1));
+
+            //move camera to follow
+            // translation = vec3.fromValues(0, -0.1, 0);
+            // mat4.fromTranslation(temp, translation);
+            // mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case '(':
+            //down
+            mat4.translate(rocket.coordFrame, rocket.coordFrame, vec3.fromValues(0, 0, -0.1));
+
+            //move camera to follow
+            // translation = vec3.fromValues(0, 0.1, 0);
+            // mat4.fromTranslation(temp, translation);
+            // mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case '%':
+            //left
+            mat4.translate(rocket.coordFrame, rocket.coordFrame, vec3.fromValues(-0.1, 0.1, 0));
+
+            break;
+        case "'":
+            //right
+            mat4.translate(rocket.coordFrame, rocket.coordFrame, vec3.fromValues(0.1, -0.1, 0));
+
+            break;
+    }
+    gl.uniformMatrix4fv (viewUnif, false, viewMat);
+    window.requestAnimFrame(drawScene);
+}
+
+function controlCamera(key){
+    var temp = mat4.create();
+
+    switch (key) {
+        case 'W':
+            //Pitch down
+            mat4.fromXRotation(temp, 0.1);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case 'A':
+            //Bank left
+            mat4.fromZRotation(temp, -0.1);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case 'S':
+            //Pitch up
+            mat4.fromXRotation(temp, -0.1);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case 'D':
+            //Bank right
+            mat4.fromZRotation(temp, 0.1);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case 'Q':
+            //Yaw left
+            mat4.fromYRotation(temp, -0.1);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case 'E':
+            //Yaw right
+            mat4.fromYRotation(temp, 0.1);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case '&':
+            //forward
+            translation = vec3.fromValues(0, 0, .1);
+            mat4.fromTranslation(temp, translation);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case '(':
+            //reverse
+            translation = vec3.fromValues(0, 0, -.1);
+            mat4.fromTranslation(temp, translation);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case '%':
+            //left
+            translation = vec3.fromValues(.1, 0, 0);
+            mat4.fromTranslation(temp, translation);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case "'":
+            //right
+            translation = vec3.fromValues(-.1, 0, 0);
+            mat4.fromTranslation(temp, translation);
+            mat4.multiply(viewMat, temp, viewMat);
+            break;
+    }
+    gl.uniformMatrix4fv (viewUnif, false, viewMat);
+    window.requestAnimFrame(drawScene);
 }
