@@ -334,6 +334,8 @@ class FalconHeavy extends ObjectGroup {
 
         // white
         var color = vec3.fromValues(.9, .9, .9);
+        //grey
+        var color2 = vec3.fromValues(.23, .23, .23);
 
         let connector = new PolygonalPrism(gl, {
             topRadius: .8,
@@ -342,7 +344,7 @@ class FalconHeavy extends ObjectGroup {
             numSides: 20,
             height: .5,
             topColor: color,
-            bottomColor: color
+            bottomColor: color2
         });
 
         let body = new PolygonalPrism(gl, {
