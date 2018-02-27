@@ -47,6 +47,49 @@ class FalconHeavy extends ObjectGroup {
         leftRocketTopperGroup = this.makeTopper();
         rightRocketTopperGroup = this.makeTopper();
 
+        // Create support bars
+        var color = vec3.fromValues(.23, .23, .23);
+        let supportBar1 = new PolygonalPrism(gl, {
+            topRadius: .05,
+            bottomRadius: .05,
+            numSides: 20,
+            height: 2.5,
+            topColor: color,
+            bottomColor: color
+        });
+        mat4.rotateX(supportBar1.coordFrame, supportBar1.coordFrame, glMatrix.toRadian(90));
+        mat4.rotateY(supportBar1.coordFrame, supportBar1.coordFrame, glMatrix.toRadian(45));
+        mat4.translate(supportBar1.coordFrame, supportBar1.coordFrame, vec3.fromValues(0, 3, -1.25));
+
+        let supportBar2 = new PolygonalPrism(gl, {
+            topRadius: .05,
+            bottomRadius: .05,
+            numSides: 20,
+            height: 2.9,
+            topColor: color,
+            bottomColor: color
+        });
+        mat4.rotateX(supportBar2.coordFrame, supportBar2.coordFrame, glMatrix.toRadian(90));
+        mat4.rotateY(supportBar2.coordFrame, supportBar2.coordFrame, glMatrix.toRadian(45));
+        mat4.translate(supportBar2.coordFrame, supportBar2.coordFrame, vec3.fromValues(-.55, 13.3, -1.42));
+
+        let supportBar3 = new PolygonalPrism(gl, {
+            topRadius: .05,
+            bottomRadius: .05,
+            numSides: 20,
+            height: 2.9,
+            topColor: color,
+            bottomColor: color
+        });
+        mat4.rotateX(supportBar3.coordFrame, supportBar3.coordFrame, glMatrix.toRadian(90));
+        mat4.rotateY(supportBar3.coordFrame, supportBar3.coordFrame, glMatrix.toRadian(45));
+        mat4.translate(supportBar3.coordFrame, supportBar3.coordFrame, vec3.fromValues(.55, 13.3, -1.42));
+
+        
+        this.group.push(supportBar1, supportBar2, supportBar3);
+
+
+
         /*
           TODO: We should consider adding the leftBoosterGroup to a group we make for the leftCylinder or something.
           TODO:-- This way we would have only 3 groups that make up the main group
@@ -143,6 +186,9 @@ class FalconHeavy extends ObjectGroup {
 
         // white
         var color = vec3.fromValues(.9, .9, .9);
+        // Gray
+        var color1 = vec3.fromValues(.23, .23, .23);
+
 
         let rocketCylinder = new PolygonalPrism(gl, {
             topRadius: .55,
@@ -153,7 +199,131 @@ class FalconHeavy extends ObjectGroup {
             bottomColor: color
         });
 
-        rocketGroup.group.push(rocketCylinder);
+        // Create 4 fins for bottom of cylinder
+        let fin1 = new Cone(gl, {
+            radius: .2,
+            height: 6.343,
+            tipColor: color1,
+            baseColor: color1
+        });
+
+        let fin2 = new Cone(gl, {
+            radius: .2,
+            height: 6.343,
+            tipColor: 1,
+            baseColor: color1
+        });
+
+        let fin3 = new Cone(gl, {
+            radius: .2,
+            height: 6.343,
+            tipColor: color1,
+            baseColor: color1
+        });
+
+        let fin4 = new Cone(gl, {
+            radius: .2,
+            height: 6.343,
+            tipColor: color1,
+            baseColor: color1
+        });
+
+        // Position fins
+        mat4.translate(fin1.coordFrame, fin1.coordFrame, vec3.fromValues(-.46, 0, .1));
+        mat4.translate(fin2.coordFrame, fin2.coordFrame, vec3.fromValues(0, .46, .1));
+        mat4.translate(fin3.coordFrame, fin3.coordFrame, vec3.fromValues(.46, 0, .1));
+        mat4.translate(fin4.coordFrame, fin4.coordFrame, vec3.fromValues(0, -.46, .1));
+
+
+        // Create top square clip things
+        let topClip1 = new PolygonalPrism(gl, {
+            topRadius: .17,
+            bottomRadius: .17,
+            numSides: 20,
+            height: .22,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+        let bottomClip1 = new PolygonalPrism(gl, {
+            topRadius: .3,
+            bottomRadius: .3,
+            numSides: 20,
+            height: .4,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+        let topClip2 = new PolygonalPrism(gl, {
+            topRadius: .17,
+            bottomRadius: .17,
+            numSides: 20,
+            height: .22,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+        let bottomClip2 = new PolygonalPrism(gl, {
+            topRadius: .3,
+            bottomRadius: .3,
+            numSides: 20,
+            height: .4,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+        let topClip3 = new PolygonalPrism(gl, {
+            topRadius: .17,
+            bottomRadius: .17,
+            numSides: 20,
+            height: .22,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+        let bottomClip3 = new PolygonalPrism(gl, {
+            topRadius: .3,
+            bottomRadius: .3,
+            numSides: 20,
+            height: .4,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+        let topClip4 = new PolygonalPrism(gl, {
+            topRadius: .17,
+            bottomRadius: .17,
+            numSides: 20,
+            height: .22,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+        let bottomClip4 = new PolygonalPrism(gl, {
+            topRadius: .3,
+            bottomRadius: .3,
+            numSides: 20,
+            height: .4,
+            topColor: color1,
+            bottomColor: color1
+        });
+
+
+        // Position square clip things
+        mat4.translate(topClip1.coordFrame, topClip1.coordFrame, vec3.fromValues(-.43, 0, 12.9));
+        mat4.translate(bottomClip1.coordFrame, bottomClip1.coordFrame, vec3.fromValues(-.3, 0, 12.5));
+
+        mat4.translate(topClip2.coordFrame, topClip2.coordFrame, vec3.fromValues(0, .43, 12.9));
+        mat4.translate(bottomClip2.coordFrame, bottomClip2.coordFrame, vec3.fromValues(0, .3, 12.5));
+
+        mat4.translate(topClip3.coordFrame, topClip3.coordFrame, vec3.fromValues(.43, 0, 12.9));
+        mat4.translate(bottomClip3.coordFrame, bottomClip3.coordFrame, vec3.fromValues(.3, 0, 12.5));
+
+        mat4.translate(topClip4.coordFrame, topClip4.coordFrame, vec3.fromValues(0, -.43, 12.9));
+        mat4.translate(bottomClip4.coordFrame, bottomClip4.coordFrame, vec3.fromValues(0, -.3, 12.5));
+
+
+        rocketGroup.group.push(rocketCylinder, fin1, fin2, fin3, fin4, topClip1, bottomClip1, topClip2, bottomClip2, topClip3, bottomClip3, topClip4, bottomClip4);
 
         return rocketGroup;
     }
