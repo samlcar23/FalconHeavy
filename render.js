@@ -138,7 +138,7 @@ function setupListeners(){
         } else if(selector === "rocket"){
             controlRocket(key);
         } else if(selector === "car"){
-
+            controlCar(key);
         } else {
             console.log("Something has gone horribly wrong");
         }
@@ -206,6 +206,73 @@ function objectSelect() {
     }
 
     document.getElementById(selector).blur();
+}
+
+function controlCar(key){
+    var temp = mat4.create();
+
+    switch (key) {
+        case 'W':
+            //Pitch down
+            mat4.rotateY(car.coordFrame, car.coordFrame, glMatrix.toRadian(1));
+
+            break;
+        case 'A':
+            //Bank left
+            mat4.rotateX(car.coordFrame, car.coordFrame, glMatrix.toRadian(-1));
+
+            break;
+        case 'S':
+            //Pitch up
+            mat4.rotateY(car.coordFrame, car.coordFrame, glMatrix.toRadian(-1));
+
+            break;
+        case 'D':
+            //Bank right
+            mat4.rotateX(car.coordFrame, car.coordFrame, glMatrix.toRadian(1));
+
+            break;
+        case 'Q':
+            //Yaw left
+            mat4.rotateZ(car.coordFrame, car.coordFrame, glMatrix.toRadian(1));
+
+            break;
+        case 'E':
+            //Yaw right
+            mat4.rotateZ(car.coordFrame, car.coordFrame, glMatrix.toRadian(-1));
+
+            break;
+        case '&':
+            //forward
+            mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(0.1, 0, 0));
+
+            //move camera to follow
+            // translation = vec3.fromValues(0, -0.1, 0);
+            // mat4.fromTranslation(temp, translation);
+            // mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case '(':
+            //Backward
+            mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(-0.1, 0, 0));
+
+            //move camera to follow
+            // translation = vec3.fromValues(0, 0.1, 0);
+            // mat4.fromTranslation(temp, translation);
+            // mat4.multiply(viewMat, temp, viewMat);
+            break;
+        case '%':
+            //left
+            mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(0, 0.1, 0));
+
+            break;
+        case "'":
+            //right
+            mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(0, -0.1, 0));
+
+            break;
+    }
+    gl.uniformMatrix4fv (viewUnif, false, viewMat);
+    window.requestAnimFrame(drawScene);
 }
 
 function controlRocket(key){
