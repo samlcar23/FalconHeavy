@@ -125,8 +125,7 @@ function createObject() {
     //move car forward
     mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(0, -5, 0));
 
-    allObjs.push(rocket, scenery);
-    allObjs.push(rocket, car, scale, scale2, scale3);
+    allObjs.push(rocket, car, scenery);
 }
 
 function setupListeners(){
