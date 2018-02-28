@@ -41,10 +41,11 @@
   </style>
 </head>
 <body onload="main()">
-  <h2>Falcon Heavy</h2>
-  <p>Dylan Kernohan & Sam Carson</p>
+  <h2 style="display: inline">Falcon Heavy</h2>
+  <P style="display: inline">| By: Dylan Kernohan & Sam Carson</P>
 
-  <input id="toggle" type="button" value="Show Controls" onclick="toggleTable();" />
+  <input style="display: grid; margin: 10px" id="toggle" type="button" value="Show Controls" onclick="toggleTable();" />
+
 
   <div id="tableView" style="display: none;">
     <table style="width:40%">
@@ -57,10 +58,11 @@
     </table>
   </div>
 
-  <div>
-    <input type="radio" id="rocket" name="control" onclick="objectSelect();"> Falcon Heavy<br>
-    <input type="radio" id="car" name="control" onclick="objectSelect();"> Tesla Roadster<br>
-    <input type="radio" id="camera" name="control" checked="checked" onclick="objectSelect();"> Camera
+  <div style="margin: 10px">
+    <text>Pick an object to control:</text>
+    <input type="radio" id="rocket" name="control" onclick="objectSelect();"> Falcon Heavy </input>
+    <input type="radio" id="car" name="control" onclick="objectSelect();"> Tesla Roadster </input>
+    <input type="radio" id="camera" name="control" checked="checked" onclick="objectSelect();"> Camera </input>
   </div>
 
 
