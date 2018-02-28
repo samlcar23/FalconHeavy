@@ -10,6 +10,7 @@ var dragging = false;
 var radioBtn;
 var selector = "camera";
 let rocket;
+let car;
 
 
 function main() {
@@ -108,20 +109,21 @@ function createObject() {
         numSides: 15,
         height: 20,
     });
-    // let axes = new Axes(gl);
-    // mat4.translate(axes.coordFrame, axes.coordFrame, vec3(0, 0, 0));
 
     mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(3, 0, 0));
     mat4.translate(scale2.coordFrame, scale2.coordFrame, vec3.fromValues(0, 0, 0));
     mat4.translate(scale3.coordFrame, scale3.coordFrame, vec3.fromValues(-3, 0, 0));
-    //mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(-5, -5, 0));
 
     rocket = new FalconHeavy(gl);
+    car = new Tesla(gl);
 
     //set rocket straight to axes
     mat4.rotateZ(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(45));
 
-    allObjs.push(rocket, scale, scale2, scale3);
+    //move car forward
+    mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(0, -5, 0));
+
+    allObjs.push(rocket, car, scale, scale2, scale3);
 }
 
 function setupListeners(){
