@@ -122,8 +122,8 @@ function createObject() {
     //set rocket straight to axes
     mat4.rotateZ(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(45));
 
-    //move car forward
-    mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(0, -5, 0));
+    //move car forward, back, and down
+    mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(-10, -10, -1.6));
 
     allObjs.push(rocket, car, scenery);
 }
