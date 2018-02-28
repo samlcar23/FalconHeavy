@@ -10,6 +10,7 @@ var dragging = false;
 var radioBtn;
 var selector = "camera";
 let rocket;
+let scenery;
 
 
 function main() {
@@ -117,11 +118,12 @@ function createObject() {
     //mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(-5, -5, 0));
 
     rocket = new FalconHeavy(gl);
+    scenery = new Scenery(gl);
 
     //set rocket straight to axes
     mat4.rotateZ(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(45));
 
-    allObjs.push(rocket, scale, scale2, scale3);
+    allObjs.push(rocket, scenery);
 }
 
 function setupListeners(){
