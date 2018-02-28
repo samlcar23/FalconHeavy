@@ -162,7 +162,7 @@ function resizeWindow() {
   let h = 0.75 * window.innerHeight;
   canvas.width = w;
   canvas.height = h;
-  mat4.perspective (projMat, glMatrix.toRadian(60), w/h, 0.05, 20);
+  mat4.perspective (projMat, glMatrix.toRadian(60), w/h, 0.05, 40);
   gl.uniformMatrix4fv (projUnif, false, projMat);
   gl.viewport(0, 0, w, h);
 }
