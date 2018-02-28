@@ -210,7 +210,7 @@ class FalconHeavy extends ObjectGroup {
         let fin2 = new Cone(gl, {
             radius: .2,
             height: 6.343,
-            tipColor: 1,
+            tipColor: color1,
             baseColor: color1
         });
 
