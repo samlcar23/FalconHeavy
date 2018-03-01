@@ -63,7 +63,7 @@ function main() {
             projMat = mat4.create();
             gl.uniformMatrix4fv (projUnif, false, projMat);
             viewMat = mat4.lookAt(mat4.create(),
-                vec3.fromValues (0, -20, 10),  // eye coord
+                vec3.fromValues (0, -30, 10),  // eye coord
                 vec3.fromValues (1, 1, 10),  // gaze point
                 vec3.fromValues (0, 0, 1)   // Z is up
             );
@@ -91,41 +91,69 @@ function drawScene() {
 
 function createObject() {
 
-    //used as reference point
-    let scale = new PolygonalPrism(gl, {
-        topRadius: .5,
-        bottomRadius: .5,
-        numSides: 15,
-        height: 20,
-    });
-    let scale2 = new PolygonalPrism(gl, {
-        topRadius: .5,
-        bottomRadius: .5,
-        numSides: 15,
-        height: 20,
-    });
-    let scale3 = new PolygonalPrism(gl, {
-        topRadius: .5,
-        bottomRadius: .5,
-        numSides: 15,
-        height: 20,
-    });
+    //create a starry sky
 
-    mat4.translate(scale.coordFrame, scale.coordFrame, vec3.fromValues(3, 0, 0));
-    mat4.translate(scale2.coordFrame, scale2.coordFrame, vec3.fromValues(0, 0, 0));
-    mat4.translate(scale3.coordFrame, scale3.coordFrame, vec3.fromValues(-3, 0, 0));
+    //white
+    var white = vec3.fromValues(1, 1, 1);
+    //mars red?
+    var red = vec3.fromValues(.5, 0, 0);
+
+    //random xyz coordinates confined to an area
+    var x;
+    var y;
+    var z;
+
+    for(var i = 0;i < 100; i++){
+        let sphere = new Sphere(gl, {
+            radius: getRandomArbitrary(.07, .12),
+            splitDepth: 5,
+            northColor: white,
+            equatorColor: white,
+            southColor: white
+        });
+
+        //get random coordinates
+        x = getRandomInt(-60, 60);
+        y = getRandomInt(-20, 40);
+        z = getRandomInt(40, 60);
+
+        mat4.translate(sphere.coordFrame, sphere.coordFrame, vec3.fromValues(x, y, z));
+
+        allObjs.push(sphere);
+    }
+
+    let mars = new Sphere(gl, {
+        radius: .2,
+        splitDepth: 5,
+        northColor: red,
+        equatorColor: red,
+        southColor: red
+    });
+    mat4.translate(mars.coordFrame, mars.coordFrame, vec3.fromValues(-5, -5, 55));
+
 
     rocket = new FalconHeavy(gl);
     car = new Tesla(gl);
     scenery = new Scenery(gl);
+    let car2 = new Tesla(gl);
+    let rocket2 = new FalconHeavy(gl);
 
     //set rocket straight to axes
     mat4.rotateZ(rocket.coordFrame, rocket.coordFrame, glMatrix.toRadian(45));
 
     //move car forward, back, and down
-    mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(-10, -10, -1.6));
+    mat4.translate(car.coordFrame, car.coordFrame, vec3.fromValues(-15, -5, -1.6));
+    mat4.rotateZ(car.coordFrame, car.coordFrame, glMatrix.toRadian(-45));
 
-    allObjs.push(rocket, car, scenery);
+    //scale car2
+    mat4.scale(car2.coordFrame, car2.coordFrame, vec3.fromValues(.3, .3, .3));
+    mat4.translate(car2.coordFrame, car2.coordFrame, vec3.fromValues(-5, -20, -2.5));
+
+    //scale rocket2
+    mat4.scale(rocket2.coordFrame, rocket2.coordFrame, vec3.fromValues(.3, .3, .3));
+    mat4.translate(rocket2.coordFrame, rocket2.coordFrame, vec3.fromValues(-50, -5, -6));
+
+    allObjs.push(rocket, car, scenery, mars, car2, rocket2);
 }
 
 function setupListeners(){
@@ -142,6 +170,33 @@ function setupListeners(){
         } else {
             console.log("Something has gone horribly wrong");
         }
+
+        if(event.keyCode === 49){
+            console.log("number pressed");
+            viewMat = mat4.lookAt(mat4.create(),
+                vec3.fromValues (-30, -15, 25),  // eye coord
+                vec3.fromValues (1, 1, 2),  // gaze point
+                vec3.fromValues (0, 0, 1)   // Z is up
+            );
+        } else if(event.keyCode === 50){
+            console.log("number pressed");
+            viewMat = mat4.lookAt(mat4.create(),
+                vec3.fromValues (0, -3, -.2),  // eye coord
+                vec3.fromValues (-.2, 1, 25),  // gaze point
+                vec3.fromValues (0, 0, 1)   // Z is up
+            );
+        } else if(event.keyCode === 51){
+            console.log("number pressed");
+            viewMat = mat4.lookAt(mat4.create(),
+                vec3.fromValues (20, -20, 3),  // eye coord
+                vec3.fromValues (1, 1, 10),  // gaze point
+                vec3.fromValues (0, 0, 1)   // Z is up
+            );
+        }else{
+
+        }
+        gl.uniformMatrix4fv (viewUnif, false, viewMat);
+        window.requestAnimFrame(drawScene);
 
     });
 
@@ -160,13 +215,21 @@ function setupListeners(){
     });
 }
 
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
 function resizeWindow() {
   let w = window.innerWidth - 16;
   let h = 0.75 * window.innerHeight;
   canvas.width = w;
   canvas.height = h;
-  mat4.perspective (projMat, glMatrix.toRadian(60), w/h, 0.05, 40);
+  mat4.perspective (projMat, glMatrix.toRadian(60), w/h, 0.05, 80);
   gl.uniformMatrix4fv (projUnif, false, projMat);
   gl.viewport(0, 0, w, h);
 }
@@ -191,11 +254,11 @@ function objectSelect() {
         selector = "rocket";
 
         //camera snap to rocket
-        viewMat = mat4.lookAt(mat4.create(),
-            vec3.fromValues (0, -20, 10),  // eye coord
-            vec3.fromValues (1, 1, 10),  // gaze point
-            vec3.fromValues (0, 0, 1)   // Z is up
-        );
+        // viewMat = mat4.lookAt(mat4.create(),
+        //     vec3.fromValues (0, -20, 10),  // eye coord
+        //     vec3.fromValues (1, 1, 10),  // gaze point
+        //     vec3.fromValues (0, 0, 1)   // Z is up
+        // );
 
         console.log(selector);
     } else if (document.getElementById('camera').checked) {
